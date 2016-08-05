@@ -588,7 +588,8 @@ class FileSyncer(object):
           _print(b'%s: %s', self.push[i], dst_name)
           if stat.S_ISDIR(s.st_mode):
             if not self.dry_run:
-              self.dst_fs[i].makedirs(dst_name)
+              if not os.path.isdir(dst_name):
+                self.dst_fs[i].makedirs(dst_name)
           else:
             with self.InterruptProtection(self.dst_fs[i], dst_name):
               if not self.dry_run:
@@ -697,6 +698,8 @@ def main(*args):
   parser.add_argument('-n', '--no-clobber', action='store_true',
                       help='Do not ever overwrite any '+
                       'existing files. Mutually exclusive with -f.')
+  parser.add_argument('-t', '--preserve-times', action='store_true',
+                      help='Preserver timestamps.')
   parser.add_argument('--dry-run',action='store_true',
                       help='Do not do anything - just show what would '+
                       'be done.')
@@ -740,6 +743,11 @@ def main(*args):
   dry_run = args.dry_run
   local_to_remote = True
   remote_to_local = False
+
+  if args.preserve_times:
+    _print(b'fuck')
+    preserve_times = True
+
   if args.two_way:
     local_to_remote = True
     remote_to_local = True
