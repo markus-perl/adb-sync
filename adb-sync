@@ -762,7 +762,6 @@ def main(*args):
   remote_to_local = False
 
   if args.preserve_times:
-    _print(b'fuck')
     preserve_times = True
 
   if args.two_way:
